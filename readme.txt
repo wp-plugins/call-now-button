@@ -25,7 +25,6 @@ But if you want more control, you can always open up the Advanced Settings and c
 ###Only for mobile optimized themes
 Usage at this point is only recommended for responsive websites or websites otherwise optimized for display on mobile devices.
 
-##
 
 == Installation ==
 
@@ -57,7 +56,7 @@ You don't have to but i recommend you do to increase your options internationall
 
 Up to you. Your phone will understand both!
 
-= Can I change the appearance of the Call Now Button?
+= Can I change the appearance of the Call Now Button? =
 
 Yes! You can easily change the color of the button and make it sit in the left or right corner. Or spread it out over the full bottom of the phone screen.
 
