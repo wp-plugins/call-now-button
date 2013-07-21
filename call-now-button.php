@@ -3,7 +3,7 @@
 Plugin Name: Call Now Button
 Plugin URI: http://callnowbutton.com
 Description: Mobile visitors will see a call now button at the bottom of your site
-Version: 0.1.0
+Version: 0.1.1
 Author: Jerry G. Rietveld
 Author URI: http://www.jgrietveld.com
 License: GPL2
@@ -27,7 +27,7 @@ License: GPL2
 */
 ?>
 <?php
-define('CNB_VERSION','0.1.0');
+define('CNB_VERSION','0.1.1');
 add_action('admin_menu', 'register_cnb_page');
 add_action('admin_init', 'cnb_options_init');
 
