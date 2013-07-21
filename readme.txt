@@ -4,7 +4,7 @@ Donate link: http://callnowbutton.com/donate/
 Tags: call, contact, customers, sell, sales, leads, convert, conversions
 Requires at least: 2.7
 Tested up to: 3.5.2
-Stable tag: 0.1.1
+Stable tag: 0.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -74,6 +74,10 @@ Yes! You can easily change the color of the button and make it sit in the left o
 
 
 == Changelog ==
+
+= 0.1.2  =
+* Transparent button fix
+* Small debug fixes
 
 = 0.1.1  =
 * JavaScript fix (needed for Advanced Settings) 

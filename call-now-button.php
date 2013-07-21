@@ -3,7 +3,7 @@
 Plugin Name: Call Now Button
 Plugin URI: http://callnowbutton.com
 Description: Mobile visitors will see a call now button at the bottom of your site
-Version: 0.1.1
+Version: 0.1.2
 Author: Jerry G. Rietveld
 Author URI: http://www.jgrietveld.com
 License: GPL2
@@ -27,13 +27,15 @@ License: GPL2
 */
 ?>
 <?php
-define('CNB_VERSION','0.1.1');
+define('CNB_VERSION','0.1.2');
 add_action('admin_menu', 'register_cnb_page');
 add_action('admin_init', 'cnb_options_init');
 
 function register_cnb_page() {
 	add_submenu_page('options-general.php', 'Call Now Button', 'Call Now Button', 'manage_options', 'call-now-button', 'call_now_settings_page');
 }
+set_basic_options();
+
 
 // add the color picker
 add_action( 'admin_enqueue_scripts', 'cnb_enqueue_color_picker' );
@@ -51,11 +53,14 @@ function call_now_settings_page() { ?>
 
 <form method="post" action="options.php">
             <?php settings_fields('cnb_options'); ?>
-            <?php $options = get_option('cnb'); ?>
+            <?php $options = cnb_get_options(); ?>
 			<h4 style="max-width:700px; text-align:right; margin:0;cursor:pointer; color:#21759b" class="cnb_settings"><span class="plus">+</span><span class="minus">-</span> Advanced settings</h4>
             <table class="form-table">
             	<tr valign="top"><th scope="row">Call Now Button</th>
-                	<td><input name="cnb[active]" type="checkbox" value="1" <?php checked('1', $options['active']); ?> /> Enable</td>
+                	<td>
+                    	<input name="cnb[active]" type="radio" value="1" <?php checked('1', $options['active']); ?> /> Enabled<br />
+                        <input name="cnb[active]" type="radio" value="0" <?php checked('0', $options['active']); ?> /> Disabled
+                    </td>
                 </tr>
                 <tr valign="top"><th scope="row">Phone number</th>
                     <td><input type="text" name="cnb[number]" value="<?php echo $options['number']; ?>" /></td>
@@ -83,7 +88,8 @@ function call_now_settings_page() { ?>
                     </td>
                 </tr>
                 <tr valign="top"><th scope="row">Click tracking</th>
-                    <td><input type="checkbox" name="cnb[tracking]" value="1" <?php checked('1', $options['tracking']); ?> /> Enable
+                    <td><input type="radio" name="cnb[tracking]" value="1" <?php checked('1', $options['tracking']); ?> /> Enabled<br />
+					    <input type="radio" name="cnb[tracking]" value="0" <?php checked('0', $options['tracking']); ?> /> Disabled
 					<p class="description">Only for sites using Google Analytics.</p></td>
                 </tr>
                 <tr valign="top"><th scope="row">Limit appearance</th>
@@ -175,5 +181,38 @@ if(get_option('cnb') && !is_admin()) {
 			}
 		}
 		add_action('wp_footer', 'cnb_footer');
+	}
+} 
+
+function cnb_get_options() { // Checking and setting the default options
+	if(!get_option('cnb')) {
+		$default_options = array(
+							  'active' => 0,
+							  'number' => '',
+							  'color' => '#009900',
+							  'appearance' => 'right',
+							  'tracking' => 0,
+							  'show' => ''
+							  );
+		add_option('cnb',$default_options);
+		$options = get_option('cnb');
+	} 
+	
+	$options = get_option('cnb');
+	
+	return $options;
+}
+function set_basic_options() {
+	if(get_option('cnb') && !array_key_exists('color', get_option('cnb'))) {
+		$options = get_option('cnb');
+		$default_options = array(
+							  'active' => $options['active'],
+							  'number' => $options['number'],
+							  'color' => '#009900',
+							  'appearance' => 'right',
+							  'tracking' => 0,
+							  'show' => ''
+							  );
+		update_option('cnb',$default_options);
 	}
 } ?>
