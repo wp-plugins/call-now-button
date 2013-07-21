@@ -4,7 +4,7 @@ Donate link: http://callnowbutton.com/donate/
 Tags: call, contact, customers, sell, sales, leads, convert, conversions
 Requires at least: 2.7
 Tested up to: 3.5.2
-Stable tag: 0.1.0
+Stable tag: 0.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -44,6 +44,10 @@ Or:
 
 == Frequently Asked Questions ==
 
+= Where can I enter my phone number? =
+
+In the Settings section on your WordPress Dashboard you'll find a new addition: Call Now Button. Click on it to go to the plugin settings.
+
 = I don't see the button on my website but I'm looking at it with my mobile phone. Why? =
 
 The button will only work on websites that use a responsive theme. Responsive means that the website adapts to the size of the screen it's being viewed on. Simply put, if you need to zoom in to be able to read the text of your website on your mobile phone, the plugin will not work.
@@ -70,6 +74,9 @@ Yes! You can easily change the color of the button and make it sit in the left o
 
 
 == Changelog ==
+
+= 0.1.1  =
+* JavaScript fix (needed for Advanced Settings) 
 
 = 0.1.0 =
 * Change the color of the button
