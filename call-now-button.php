@@ -3,14 +3,14 @@
 Plugin Name: Call Now Button
 Plugin URI: http://callnowbutton.com
 Description: Mobile visitors will see a call now button at the bottom of your site
-Version: 0.1.2
-Author: Jerry G. Rietveld
+Version: 0.1.3
+Author: Jerry Rietveld
 Author URI: http://www.jgrietveld.com
 License: GPL2
 */
 ?>
 <?php
-/*  Copyright 2013  Jerry G. Rietveld  (email : jerry@jgrietveld.com)
+/*  Copyright 2013  Jerry Rietveld  (email : jerry@jgrietveld.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
@@ -27,7 +27,7 @@ License: GPL2
 */
 ?>
 <?php
-define('CNB_VERSION','0.1.2');
+define('CNB_VERSION','0.1.3');
 add_action('admin_menu', 'register_cnb_page');
 add_action('admin_init', 'cnb_options_init');
 
@@ -48,7 +48,7 @@ function cnb_options_init() {
 	register_setting('cnb_options','cnb');
 }
 function call_now_settings_page() { ?>
-<div class="wrap"><h2>Call Now Button <span style="font-size:12px; font-variant: small-caps; font-family: Verdana, Geneva, sans-serif;">by <a class="pluginhelp" style=" text-decoration:none;" href="http://www.jgrietveld.com" rel="help">Jerry G. Rietveld</a></span></h2>
+<div class="wrap"><h2>Call Now Button <span style="font-size:12px; font-variant: small-caps; font-family: Verdana, Geneva, sans-serif;">by <a class="pluginhelp" style=" text-decoration:none;" href="http://www.jgrietveld.com" rel="help">Jerry Rietveld</a></span></h2>
 
 
 <form method="post" action="options.php">
@@ -88,9 +88,10 @@ function call_now_settings_page() { ?>
                     </td>
                 </tr>
                 <tr valign="top"><th scope="row">Click tracking</th>
-                    <td><input type="radio" name="cnb[tracking]" value="1" <?php checked('1', $options['tracking']); ?> /> Enabled<br />
+                    <td><input type="radio" name="cnb[tracking]" value="2" <?php checked('2', $options['tracking']); ?> /> Google Universal Analytics (analytics.js)<br />
+					    <input type="radio" name="cnb[tracking]" value="1" <?php checked('1', $options['tracking']); ?> /> Google Classic Analytics (ga.js)<br />
 					    <input type="radio" name="cnb[tracking]" value="0" <?php checked('0', $options['tracking']); ?> /> Disabled
-					<p class="description">Only for sites using Google Analytics.</p></td>
+					<p class="description">Once click tracking has been set up and working on your site for a day, go to the Content section of the reports and view Event Tracking.</p></td>
                 </tr>
                 <tr valign="top"><th scope="row">Limit appearance</th>
                     <td><input type="text" name="cnb[show]" value="<?php echo $options['show']; ?>" />
@@ -120,13 +121,14 @@ function call_now_settings_page() { ?>
 <?php }
 if(get_option('cnb') && !is_admin()) {
 	
-	// Darker color function to calculate borders
-	function darkerColor($color) {
+	// Color functions to calculate borders
+	function changeColor($color, $direction) {
 		if(!preg_match('/^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i', $color, $parts));
+		if(!isset($direction) || $direction == "lighter") { $change = 45; } else { $change = -50; }
 		for($i = 1; $i <= 3; $i++) {
 		  $parts[$i] = hexdec($parts[$i]);
-		  $parts[$i] = round($parts[$i] * 1.4);
-		  if($parts[$i] > 255) { $parts[$i] = 255; }
+		  $parts[$i] = round($parts[$i] + $change);
+		  if($parts[$i] > 255) { $parts[$i] = 255; } elseif($parts[$i] < 0) { $parts[$i] = 0; }
 		  $parts[$i] = dechex($parts[$i]);
 		} 
 		$output = '#' . str_pad($parts[1],2,"0",STR_PAD_LEFT) . str_pad($parts[2],2,"0",STR_PAD_LEFT) . str_pad($parts[3],2,"0",STR_PAD_LEFT);
@@ -151,7 +153,7 @@ if(get_option('cnb') && !is_admin()) {
 				$ButtonAppearance = "width:100px;right:0;border-bottom-left-radius:40px; border-top-left-radius:40px;";
 				$ButtonExtra = "";				
 			}
-			echo $credits."<style>#callnowbutton {display:none;} @media screen and (max-width:650px){#callnowbutton {display:block; ".$ButtonAppearance." height:80px; position:fixed; bottom:-20px; border-top:2px solid ".darkerColor($options['color'])."; background:url(" .plugins_url( 'callbutton01.png' , __FILE__ ). ") center 10px no-repeat ".$options['color']."; text-decoration:none; -webkit-box-shadow:0 0 5px #888; z-index:9999;}".$ButtonExtra."}</style>\n";
+			echo $credits."<style>#callnowbutton {display:none;} @media screen and (max-width:650px){#callnowbutton {display:block; ".$ButtonAppearance." height:80px; position:fixed; bottom:-20px; border-top:2px solid ".changeColor($options['color'],'lighter')."; background:url(data:image/svg+xml;base64,".svg(changeColor($options['color'], 'darker') ).") center 2px no-repeat ".$options['color']."; text-decoration:none; box-shadow:0 0 5px #888; z-index:9999;background-size:58px 58px}".$ButtonExtra."}</style>\n";
 		}
 		add_action('wp_head', 'cnb_head');
 		
@@ -168,6 +170,8 @@ if(get_option('cnb') && !is_admin()) {
 			
 			if($alloptions['tracking'] == '1') {
 				$tracking = "onclick=\"_gaq.push(['_trackEvent', 'Contact', 'Call Now Button', 'Phone']);\""; 
+			} elseif($alloptions['tracking'] == '2') {
+				$tracking = "onclick=\"ga('send', 'event', 'Contact', 'Call Now Button', 'Phone');\""; 
 			} else {
 				$tracking = "";
 			}
@@ -215,4 +219,9 @@ function set_basic_options() {
 							  );
 		update_option('cnb',$default_options);
 	}
+}
+function svg($color2) {
+	$phone1 = '<path d="M7.104 14.032l15.586 1.984c0 0-0.019 0.5 0 0.953c0.029 0.756-0.26 1.534-0.809 2.1 l-4.74 4.742c2.361 3.3 16.5 17.4 19.8 19.8l16.813 1.141c0 0 0 0.4 0 1.1 c-0.002 0.479-0.176 0.953-0.549 1.327l-6.504 6.505c0 0-11.261 0.988-25.925-13.674C6.117 25.3 7.1 14 7.1 14" fill="'.$color2.'"/><path d="M7.104 13.032l6.504-6.505c0.896-0.895 2.334-0.678 3.1 0.35l5.563 7.8 c0.738 1 0.5 2.531-0.36 3.426l-4.74 4.742c2.361 3.3 5.3 6.9 9.1 10.699c3.842 3.8 7.4 6.7 10.7 9.1 l4.74-4.742c0.897-0.895 2.471-1.026 3.498-0.289l7.646 5.455c1.025 0.7 1.3 2.2 0.4 3.105l-6.504 6.5 c0 0-11.262 0.988-25.925-13.674C6.117 24.3 7.1 13 7.1 13" fill="#fff"/>';
+	$svg = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 60 60">' . $phone1 . '</svg>';
+	return base64_encode($svg);
 } ?>

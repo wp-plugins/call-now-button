@@ -3,8 +3,8 @@ Contributors: jgrietveld
 Donate link: http://callnowbutton.com/donate/
 Tags: call, contact, customers, sell, sales, leads, convert, conversions
 Requires at least: 2.7
-Tested up to: 4.0
-Stable tag: 0.1.2
+Tested up to: 4.2.2
+Stable tag: 0.1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -74,6 +74,11 @@ Yes! You can easily change the color of the button and make it sit in the left o
 
 
 == Changelog ==
+
+= 0.1.3  =
+* Click tracking added for Universal Analytics
+* Phone icon now SVG so super crisp on high pixel density screens (e.g. Retina screens)
+* SVG icon embedded in code so no more http requests
 
 = 0.1.2  =
 * Transparent button fix
